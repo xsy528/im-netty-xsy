@@ -1,0 +1,12 @@
+server:
+  #ws心跳超时时间
+  heart:
+    time: 300
+  netty:
+    port: 8081
+
+login:
+  #握手超时时间
+  out-time: 300
+  #握手密钥
+  key: MZc9ZQcHkk9TyCAdTmNJYdC0PP8yzXGf

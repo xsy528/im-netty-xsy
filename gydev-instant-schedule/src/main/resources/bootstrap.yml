@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    kubernetes:
+      enabled: true # 标记使用confgimaps
+      config:
+        sources:
+          - name: service-im-scheduler # 使用的confgimap名字
+      secrets:
+        enabled: true
+        enable-api: true
+        sources:
+          # 标记要使用的secret名字
+          - name: dlyy-secret

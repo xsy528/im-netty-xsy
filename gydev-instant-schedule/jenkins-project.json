@@ -1,0 +1,42 @@
+{
+    "RuntimeVariable": {
+      "K8S_DOMAIN_NAME": "cd ${PROJECT_PATH};source build-script/config.env;echo ${SERVICE_NAME}",
+      "PROJECT_VERSION": "http://k8sproject.oa.gyyx.cn/K8s/version/addversion?domainname=gydev-instant-schedule&desc=${K8S_DOMAIN_NAME}&user=${REAL_USER_NAME}&branchname=${branch_name}"
+    },
+    "初始化": {
+      "绑定构建参数": {
+        "Type": "BUILD_PARAMETER_DROP_DOWN_MENU",
+        "StepsName": "部署",
+        "ParamName": "deploy-choice"
+      }
+    },
+    "编译构建":{
+      "执行Maven构建": {
+        "Type": "COMMAND_STATUS",
+        "Script": {
+          "build log4j2.xml": "cd ${PROJECT_PATH};source build-script/config.env;mv src/main/resources/log4j2.xml log4j2.xml;envsubst < log4j2.xml > src/main/resources/log4j2.xml",
+          "Maven构建": "cd ${PROJECT_PATH}../;mvn clean package -U -DskipTests"
+        }
+      }
+  
+    },
+    "部署": {
+      "部署到内网": {
+        "Type": "COMMAND_STATUS",
+        "Script": {
+          "create configmap":"cd ${PROJECT_PATH};source build-script/config.env;envsubst < build-script/configmap-template.yml > configmap-template.yml;sed -i 's/^/    /g' src/main/resources/application.yml;sed -i 's/dlyy-master/dypt-local/g' src/main/resources/application.yml;cat configmap-template.yml src/main/resources/application.yml > service-im-scheduler.yml",
+          "build images": "cd ${PROJECT_PATH};source build-script/config.env;docker build -f build-script/Dockerfile -t repo.gydev.cn:8082/dypt-local/gydev-instant-schedule:${PROJECT_VERSION} .;docker push repo.gydev.cn:8082/dypt-local/gydev-instant-schedule:${PROJECT_VERSION};docker rmi repo.gydev.cn:8082/dypt-local/gydev-instant-schedule:${PROJECT_VERSION}",
+          "switch pod user": "kubectl config use-context kubernetes-admin@kubernetes",
+          "deploy cm": "cd ${PROJECT_PATH};sed -i 's/namespace: {NAMESPACE}/namespace: dypt-local/g' service-im-scheduler.yml;kubectl apply -f service-im-scheduler.yml;",
+          "deploy k8s": "cd ${PROJECT_PATH};source build-script/config.env;export PROJECT_VERSION=${PROJECT_VERSION};envsubst < build-script/k8s-script.yml | kubectl apply -n ${NAMESPACE} -f -"
+        }
+      },
+      "部署到外网": {
+        "Type": "COMMAND_STATUS",
+        "Script": {
+          "create configmap":"cd ${PROJECT_PATH};source build-script/config.env;envsubst < build-script/configmap-template.yml > configmap-template.yml;sed -i 's/^/    /g' src/main/resources/application.yml;sed -i 's/dypt-master/dypt-local/g' src/main/resources/application.yml;cat configmap-template.yml src/main/resources/application.yml > service-im-scheduler.yml",
+          "build images": "cd ${PROJECT_PATH};source build-script/config.env;docker build -f build-script/Dockerfile -t repo.gydev.cn:8082/dypt-local/gydev-instant-schedule:${PROJECT_VERSION} .;docker push repo.gydev.cn:8082/dypt-local/gydev-instant-schedule:${PROJECT_VERSION};docker rmi repo.gydev.cn:8082/dypt-local/gydev-instant-schedule:${PROJECT_VERSION}"
+        }
+      }
+    }
+  }

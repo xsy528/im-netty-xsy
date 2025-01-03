@@ -1,0 +1,72 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${SERVICE_NAME}
+  namespace: dypt-local
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: ${DOMAIN_NAME}
+      http:
+        paths:
+          - pathType: Prefix
+            backend:
+              service:
+                name: ${SERVICE_NAME}
+                port:
+                  number: 8081
+            path: /
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${SERVICE_NAME}
+  labels:
+    app: ${SERVICE_NAME}
+  annotations:
+    prometheus.io/should_be_scraped: "true"
+    prometheus.io/scrape_port: "9001"
+spec:
+  ports:
+    - name: http
+      port: 8081
+  selector:
+    app: ${SERVICE_NAME}
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${SERVICE_NAME}
+spec:
+  selector:
+    matchLabels:
+      app: ${SERVICE_NAME}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ${SERVICE_NAME}
+    spec:
+      nodeSelector:
+        nodetype: ${WORK_NODE}
+      hostAliases:
+        - ip: "10.12.54.1"
+          hostnames:
+            - "memcache.oa.gyyx.cn"
+            - "wslink.gyyx.cn"
+      containers:
+        - name: ${SERVICE_NAME}
+          image: repo.gydev.cn:8082/${NAMESPACE}/${SERVICE_NAME}:${PROJECT_VERSION}
+          env:
+            - name: NODE
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: 8081

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.6.8</version> <!-- lookup parent from repository -->
+        <relativePath/>
+    </parent>
+    <groupId>cn.gyyx.im</groupId>
+    <artifactId>gydev-instant-message</artifactId>
+    <version>1.0</version>
+    <url>http://know.gydev.cn</url>
+    <name>gydev-instant</name>
+    <description>single project build template</description>
+    <developers>
+        <developer>
+        <name>hai</name>
+        <email>guohai@gmail.com</email>
+        </developer>
+    </developers>
+    <properties>
+        <java.version>11</java.version>
+        <gydev.version>RED.107</gydev.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!-- 需要排除starter-web中的logging后log4j才能正常工作 -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- 配置k8s内的CM使用，不使用请删除否则项目启动会报错 -->
+         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-kubernetes-client-config</artifactId>
+        </dependency>
+
+        <!-- 单元测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!--openfeign-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--多数据库-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+
+        <!--        alibaba druid 连接池-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+        <!--        mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--智汇通知系统 生产者starter项目-->
+        <dependency>
+            <groupId>cn.gydev.lib.wns</groupId>
+            <artifactId>wisdom-notification-system-provider-spring-boot-starter</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.gydev.lib</groupId>
+            <artifactId>gyredis-spring-boot-starter</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.gyyx.im</groupId>
+            <artifactId>gydev-instant-core</artifactId>
+            <version>1.0</version>
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>jakarta.json-api</artifactId>-->
+<!--                    <groupId>jakarta.json</groupId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>elasticsearch-rest-client</artifactId>-->
+<!--                    <groupId>org.elasticsearch.client</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.elasticsearch.client</groupId>-->
+<!--            <artifactId>elasticsearch-rest-client</artifactId>-->
+<!--            <version>8.13.4</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>jakarta.json</groupId>-->
+<!--            <artifactId>jakarta.json-api</artifactId>-->
+<!--            <version>2.0.1</version>-->
+<!--        </dependency>-->
+
+        <!--日志打印-->
+        <dependency>
+            <groupId>cn.gydev.lib</groupId>
+            <artifactId>cn-gydev-log</artifactId>
+            <version>0.0.2-test</version>
+        </dependency>
+
+
+    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.gydev.lib</groupId>
+                <artifactId>gydev-dependencies</artifactId>
+                <version>${gydev.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

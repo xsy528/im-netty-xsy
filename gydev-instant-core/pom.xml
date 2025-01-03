@@ -1,0 +1,153 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.6.8</version> <!-- lookup parent from repository -->
+    <relativePath   />
+  </parent>
+
+  <groupId>cn.gyyx.im</groupId>
+  <artifactId>gydev-instant-core</artifactId>
+  <version>1.0</version>
+
+  <properties>
+    <java.version>11</java.version>
+    <gydev.version>RED.107</gydev.version>
+    <spring-cloud.version>2021.0.1</spring-cloud.version>
+  </properties>
+
+  <dependencies>
+    <!-- 敏感词过滤-->
+    <dependency>
+      <groupId>com.github.houbb</groupId>
+      <artifactId>sensitive-word</artifactId>
+      <version>0.13.1</version>
+    </dependency>
+
+    <!--        mybatis-->
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+    </dependency>
+
+    <!-- automatically plugs  -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>cn.gydev.lib</groupId>
+      <artifactId>gydev-utils</artifactId>
+      <version>1.9.5</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>jackson-databind</artifactId>
+          <groupId>com.fasterxml.jackson.core</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>gydev-common</artifactId>
+          <groupId>cn.gydev.lib</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!--ResultBean-->
+    <dependency>
+      <groupId>cn.gydev.lib</groupId>
+      <artifactId>gydev-common</artifactId>
+      <version>1.5.7</version>
+    </dependency>
+
+    <!--json-->
+    <dependency>
+      <groupId>com.alibaba.fastjson2</groupId>
+      <artifactId>fastjson2</artifactId>
+      <version>2.0.26</version>
+    </dependency>
+
+    <!-- pagehelper -->
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper-spring-boot-starter</artifactId>
+      <version>1.4.1</version>
+    </dependency>
+
+    <!--    <dependency>-->
+    <!--      <groupId>com.github.pagehelper</groupId>-->
+    <!--      <artifactId>pagehelper</artifactId>-->
+    <!--      <version>5.1.10</version>-->
+    <!--    </dependency>-->
+
+    <!--    <dependency>-->
+    <!--      <groupId>org.springframework.boot</groupId>-->
+    <!--      <artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
+    <!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>co.elastic.clients</groupId>-->
+<!--      <artifactId>elasticsearch-java</artifactId>-->
+<!--      <version>8.13.4</version>-->
+<!--      <exclusions>-->
+<!--        <exclusion>-->
+<!--          <artifactId>jakarta.json-api</artifactId>-->
+<!--          <groupId>jakarta.json</groupId>-->
+<!--        </exclusion>-->
+<!--      </exclusions>-->
+<!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>org.elasticsearch.client</groupId>-->
+<!--      <artifactId>elasticsearch-rest-client</artifactId>-->
+<!--      <version>8.13.4</version>-->
+<!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>jakarta.json</groupId>-->
+<!--      <artifactId>jakarta.json-api</artifactId>-->
+<!--      <version>2.0.1</version>-->
+<!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--      <artifactId>jackson-databind</artifactId>-->
+<!--      <version>2.17.0</version>-->
+<!--    </dependency>-->
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>cn.gydev.lib</groupId>
+        <artifactId>gydev-dependencies</artifactId>
+        <version>${gydev.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+          <testFailureIgnore>true</testFailureIgnore>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

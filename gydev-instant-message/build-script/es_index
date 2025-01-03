@@ -1,0 +1,53 @@
+PUT /year_all_personal_chat_log
+{
+  "settings": {
+    "index": {
+      "max_result_window": 2147483647,
+      "max_ngram_diff": 15
+    },
+    "analysis": {
+      "analyzer": {
+        "my_ngram_analyzer": {
+          "tokenizer": "my_ngram_tokenizer",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      },
+      "tokenizer": {
+        "my_ngram_tokenizer": {
+          "type": "ngram",
+          "min_gram": 1,
+          "max_gram": 16
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "code": {
+        "type": "integer"
+      },
+      "receiver": {
+        "type": "keyword"
+      },
+      "platform": {
+        "type": "keyword"
+      },
+      "sender": {
+        "type": "keyword"
+      },
+      "contentType": {
+        "type": "keyword"
+      },
+      "content": {
+        "type": "text",
+        "analyzer": "my_ngram_analyzer",
+        "search_analyzer": "my_ngram_analyzer"
+      },
+      "createTime": {
+        "type": "date"
+      }
+    }
+  }
+}

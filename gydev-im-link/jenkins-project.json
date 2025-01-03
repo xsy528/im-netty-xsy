@@ -1,0 +1,41 @@
+{
+    "RuntimeVariable": {
+      "K8S_DOMAIN_NAME": "cd ${PROJECT_PATH};source build-script/config.env;echo ${SERVICE_NAME}",
+      "PROJECT_VERSION": "http://k8sproject.oa.gyyx.cn/K8s/version/addversion?domainname=wslink.gyyx.cn&desc=${K8S_DOMAIN_NAME}&user=${REAL_USER_NAME}&branchname=${branch_name}"
+    },
+    "初始化": {
+      "绑定构建参数": {
+        "Type": "BUILD_PARAMETER_DROP_DOWN_MENU",
+        "StepsName": "部署",
+        "ParamName": "deploy-choice"
+      }
+    },
+    "编译构建":{
+      "执行Maven构建": {
+        "Type": "COMMAND_STATUS",
+        "Script": {
+          "Maven构建": "cd ${PROJECT_PATH};mvn clean package -U -DskipTests"
+        }
+      }
+  
+    },
+    "部署": {
+      "部署到内网": {
+        "Type": "COMMAND_STATUS",
+        "Script": {
+          "create configmap":"cd ${PROJECT_PATH};source build-script/config.env;envsubst < build-script/configmap-template.yml > configmap-template.yml;sed -i 's/^/    /g' src/main/resources/application.yml;cat configmap-template.yml src/main/resources/application.yml > ws-link-gyyx-cn.yml",
+          "build images": "cd ${PROJECT_PATH};source build-script/config.env;docker build -f build-script/Dockerfile -t repo.gydev.cn:8082/${NAMESPACE}/${SERVICE_NAME}:${PROJECT_VERSION} .;docker push repo.gydev.cn:8082/${NAMESPACE}/${SERVICE_NAME}:${PROJECT_VERSION};docker rmi repo.gydev.cn:8082/${NAMESPACE}/${SERVICE_NAME}:${PROJECT_VERSION}",
+          "switch pod user": "kubectl config use-context kubernetes-admin@kubernetes",
+          "deploy cm": "cd ${PROJECT_PATH};sed -i 's/namespace: {NAMESPACE}/namespace: dypt-local/g' ws-link-gyyx-cn.yml;kubectl apply -f ws-link-gyyx-cn.yml;",
+          "deploy k8s": "cd ${PROJECT_PATH};source build-script/config.env;export PROJECT_VERSION=${PROJECT_VERSION};envsubst < build-script/k8s-script.yml | kubectl apply -n ${NAMESPACE} -f -"
+        }
+      },
+      "部署到外网": {
+        "Type": "COMMAND_STATUS",
+        "Script": {
+          "create configmap":"cd ${PROJECT_PATH};source build-script/config.env;envsubst < build-script/configmap-template.yml > configmap-template.yml;sed -i 's/^/    /g' src/main/resources/application.yml;cat configmap-template.yml src/main/resources/application.yml > ws-link-gyyx-cn.yml",
+          "build images": "cd ${PROJECT_PATH};source build-script/config.env;docker build -f build-script/Dockerfile -t repo.gydev.cn:8082/${NAMESPACE}/${SERVICE_NAME}:${PROJECT_VERSION} .;docker push repo.gydev.cn:8082/${NAMESPACE}/${SERVICE_NAME}:${PROJECT_VERSION};docker rmi repo.gydev.cn:8082/${NAMESPACE}/${SERVICE_NAME}:${PROJECT_VERSION}"
+        }
+      }
+    }
+  }

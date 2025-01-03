@@ -1,0 +1,7 @@
+CheckboxParameter:
+  - key: ws-link-gyyx-cn
+    value: /gydev-im-link
+  - key: im-service-gyyx-cn
+    value: /gydev-instant-message
+  - key: gydev-instant-schedule
+    value: /gydev-instant-schedule

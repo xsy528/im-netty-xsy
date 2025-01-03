@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="warn">
+    <!--日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%p] [%c] - %m%n" charset="UTF-8"/>
+        </Console>
+        <RollingFile name="RollingFileError"
+                     fileName="/data/logs/service-im-scheduler/common/error.log"
+                     filePattern="/data/logs/service-im-scheduler/common/error-%i.log"
+                     immediateFlush="false">
+            <ThresholdFilter level="error" onMatch="ACCEPT"
+                             onMismatch="DENY" />
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%c] [%L] - %m%n" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+        <RollingFile name="RollingFileWarn"
+                     fileName="/data/logs/service-im-scheduler/common/warn.log"
+                     filePattern="/data/logs/service-im-scheduler/common/warn-%i.log"
+                     immediateFlush="false">
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%c] [%L] - %m%n" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+        <RollingFile name="RollingFileInfo"
+                     fileName="/data/logs/service-im-scheduler/common/info.log"
+                     filePattern="/data/logs/service-im-scheduler/common/info-%i.log"
+                     immediateFlush="false">
+            <Filters>
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL" />
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%c] [%L] - %m%n" />
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <AsyncRoot level="info">
+            <AppenderRef ref="RollingFileInfo" />
+            <AppenderRef ref="RollingFileWarn" />
+            <AppenderRef ref="RollingFileError" />
+            <AppenderRef ref="Console" />
+        </AsyncRoot>
+    </Loggers>
+</configuration>

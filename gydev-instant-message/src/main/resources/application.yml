@@ -1,0 +1,67 @@
+server:
+  port: 8081
+login:
+  key: MZc9ZQcHkk9TyCAdTmNJYdC0PP8yzXGf
+out:
+  time: 300
+spring:
+  datasource:
+    dynamic:
+      primary: chat_wave_db
+      strict: true
+      datasource:
+        chat_wave_db:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          type: com.alibaba.druid.pool.DruidDataSource
+          url: jdbc:mysql://${chat-wave-db-url}:${chat-wave-db-port}/chat_wave_db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai&useSSL=false
+          username: ${chat-wave-username}
+          password: ${db-mysql-password}
+          druid:
+            initial-size: 2
+            max-active: 50
+            max-wait: 60000
+            min-evictable-idle-time-millis: 25200000
+            min-idle: 2
+            test-on-borrow: false
+            test-on-return: false
+            test-while-idle: true
+            time-between-eviction-runs-millis: 60000
+            validation-query: select 'x'
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    cn.gyyx.im.dao: debug
+
+
+message:
+ retract:
+     time:
+      1477358668: 120
+      0000000001: 120
+      1000000002: 120
+sign:
+ expire:
+   time:
+     1477358668: 600
+     0000000001: 300
+     1000000002: 300
+
+gydev:
+  im:
+    rabbitmq:
+      enabled: true
+      host: ${messagenotify-rabbitmq-host}
+      port: ${messagenotify-rabbitmq-port}
+      username: ${messagenotify-rabbitmq-username}
+      password: ${messagenotify-rabbitmq-password}
+    queue:
+      podQueueName: wns.kernel.notify.queue
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 10000
